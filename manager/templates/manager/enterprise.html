@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise</title>
+</head>
+<body>
+    <h1>Автомобили {{ enterprise }}</h1>
+    <script>
+        let tat = new Date();
+        let element = null;
+    </script>
+    <table>
+        {% for vehicle in page_obj %}
+            <tr>
+                <td>
+                    <a href={% url 'vehicle' vehicle.id%}>{{ vehicle.id }} {{ vehicle.brand.name }}
+                    </a>
+                </td>
+
+                <td>
+                    <div id="{{ vehicle.id }}"></div>
+                </td>
+                <td>
+                    <form action="{% url 'change_vehicle' id=vehicle.id %}" method="get">
+                        <input type="submit" value="Изменить">
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'delete_vehicle' id=vehicle.id %}" method="get">
+                        <input type="submit" value="Удалить">
+                    </form>
+                </td>
+            </tr>
+{#            <script>#}
+{#                tat = new Date({{ vehicle.buy_datetime.timestamp }} * 1000);#}
+{#                console.log(tat);#}
+{#                element = document.getElementById("{{ vehicle.id }}")#}
+{#                element.textContent=tat;#}
+{#            </script>#}
+        {% endfor %}
+    </table>
+
+    <p></p>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <p></p>
+
+    <form action="{% url 'create_vehicle' %}" method="get">
+        <input type="submit" value="Создать">
+    </form>
+</body>
+</html>

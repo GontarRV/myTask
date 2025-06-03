@@ -23,7 +23,7 @@ class EnterpriseSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Enterprise
-        fields = ('e_id', 'e_name', 'e_city', 'e_address', 'vehicles')
+        fields = ('e_id', 'e_name', 'e_city', 'e_address', 'vehicles','manager')
 
     def get_vehicles(self, obj):
         return [

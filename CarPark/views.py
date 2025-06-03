@@ -1,33 +1,9 @@
-# #from django.http import JsonResponse
-# from rest_framework import viewsets
-# from .serializers import BrandSerializer
-# from .models import Brand
-#
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from django.http import JsonResponse
-# from .models import Vehicle
-# from .serializers import VehicleSerializer
-#
-# class VehicleViewSet(viewsets.ModelViewSet):
-#     queryset = Vehicle.objects.all().order_by('car_id')
-#     serializer_class = VehicleSerializer
-#
-# class BrandViewSet(viewsets.ModelViewSet):
-#     queryset = Brand.objects.all().order_by('brand_id')
-#     serializer_class = BrandSerializer
-#
-# #class VehicleIndexAPI(APIView):
-# #    def get(self, request):
-# #        vehicles = Vehicle.objects.all()
-# #        serializer = VehicleSerializer(vehicles, many=True)
-# #        return JsonResponse(serializer.data, safe=False)
-
 from rest_framework import viewsets
-from rest_framework import generics, permissions, status
-from rest_framework.response import Response
-# from .serializers import UserRegistrationSerializer, CustomTokenObtainSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+
+from rest_framework.views import APIView
+from django.http import JsonResponse, HttpResponseForbidden
+from manager.models import Manager
+
 from .models import Vehicle, Brand, Driver, Enterprise, DriverVehicleAssignment
 from .serializers import (
     VehicleSerializer,
@@ -90,11 +66,3 @@ class DriverVehicleAssignmentViewSet(viewsets.ModelViewSet):
         if assignment.is_active:
             assignment.vehicle.active_driver = assignment.driver
             assignment.vehicle.save()
-
-# class RegisterView(generics.CreateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserRegistrationSerializer
-#     permission_classes = [permissions.AllowAny]
-#
-# class LoginView(TokenObtainPairView):
-#     serializer_class = CustomTokenObtainSerializer

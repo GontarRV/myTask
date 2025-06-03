@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'CarPark',
     'rest_framework',
-    # 'users',
+    'manager',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-# AUTH_USER_MODEL = 'users.CustomUser'
+# AUTH_USER_MODEL = 'manager.Manager'
 #
 # AUTHENTICATION_BACKENDS = [
 #     'django.contrib.auth.backends.ModelBackend',
@@ -73,7 +73,7 @@ ROOT_URLCONF = 'myCarPark.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

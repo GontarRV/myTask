@@ -21,6 +21,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('CarPark.urls')),
+    path('manager/', include('manager.urls')),
     # path('users/', include('users.urls')),
     # path('register/', RegisterView.as_view(), name='register'),
     # path('login/', LoginView.as_view(), name='login'),
