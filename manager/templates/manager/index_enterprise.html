@@ -9,7 +9,7 @@
 <body>
     <h1>Компании менеджера {{ manager.username }}</h1>
     {% for enterprise in enterprises %}
-        <li><a href={% url 'manager:enterprise' name=enterprise.name %}>{{ enterprise.name }}</a><li>
+        <li><a href={% url 'manager:enterprise' name=enterprise.e_name %}>{{ enterprise.e_name }}</a></li>
     {% endfor %}
 </body>
 </html>

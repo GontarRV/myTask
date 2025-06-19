@@ -207,6 +207,7 @@ class Enterprise(models.Model):
     e_id = AutoField(primary_key=True, verbose_name='ID')
     e_name = models.CharField(max_length=20, verbose_name='Название предприятия')
     e_city = models.CharField(max_length=20, verbose_name='Город нахождения')
+    managers = models.ManyToManyField('manager.Manager', related_name='enterprises', blank = True)
     e_address = models.CharField(max_length=50, verbose_name='Адрес', blank=True)
 
     class Meta:

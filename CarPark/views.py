@@ -2,6 +2,9 @@ from rest_framework import viewsets
 
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
+from rest_framework import permissions
 from manager.models import Manager
 
 from .models import Vehicle, Brand, Driver, Enterprise, DriverVehicleAssignment
@@ -13,42 +16,53 @@ from .serializers import (
     DriverVehicleAssignmentSerializer
 )
 
-
+@method_decorator(csrf_protect, name='dispatch')
 class EnterpriseViewSet(viewsets.ModelViewSet):
     queryset = Enterprise.objects.all()
     serializer_class = EnterpriseSerializer
 
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'manager'):
+            return Enterprise.objects.filter(managers=user.manager)
+        return Enterprise.objects.none()
+
+@method_decorator(csrf_protect, name='dispatch')
 class BrandViewSet(viewsets.ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
 
-
+@method_decorator(csrf_protect, name='dispatch')
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.select_related('brand', 'company', 'active_driver')
     serializer_class = VehicleSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def perform_update(self, serializer):
-        instance = serializer.instance
-        # Проверка при изменении предприятия
-        if 'company' in serializer.validated_data and instance.drivers.exists():
-            from rest_framework.exceptions import ValidationError
-            raise ValidationError({"company": "Нельзя изменить предприятие, пока есть назначенные водители"})
-        serializer.save()
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'manager'):
+            # Получаем предприятия, которыми управляет менеджер
+            enterprises = user.manager.enterprises.all()
+            return Vehicle.objects.filter(company__in=enterprises)
+        return Vehicle.objects.none()
 
-
+@method_decorator(csrf_protect, name='dispatch')
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.select_related('company')
     serializer_class = DriverSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        enterprise_id = self.request.query_params.get('enterprise')
-        if enterprise_id:
-            queryset = queryset.filter(company_id=enterprise_id)
-        return queryset
+        user = self.request.user
+        if hasattr(user, 'manager'):
+            # Получаем предприятия, которыми управляет менеджер
+            enterprises = user.manager.enterprises.all()
+            return Driver.objects.filter(company__in=enterprises)
+        return Driver.objects.none()
 
-
+@method_decorator(csrf_protect, name='dispatch')
 class DriverVehicleAssignmentViewSet(viewsets.ModelViewSet):
     queryset = DriverVehicleAssignment.objects.select_related('driver', 'vehicle')
     serializer_class = DriverVehicleAssignmentSerializer

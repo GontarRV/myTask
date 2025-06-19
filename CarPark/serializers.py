@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import Vehicle, Brand
+from manager.models import Manager
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class BrandSerializer(serializers.HyperlinkedModelSerializer):
@@ -18,12 +19,12 @@ from rest_framework import serializers
 from .models import Vehicle, Brand, Driver, Enterprise, DriverVehicleAssignment
 
 
-class EnterpriseSerializer(serializers.HyperlinkedModelSerializer):
+class EnterpriseSerializer(serializers.ModelSerializer):
     vehicles = serializers.SerializerMethodField()
 
     class Meta:
         model = Enterprise
-        fields = ('e_id', 'e_name', 'e_city', 'e_address', 'vehicles','manager')
+        fields = ('e_id', 'e_name', 'e_city', 'e_address', 'vehicles')
 
     def get_vehicles(self, obj):
         return [
@@ -72,28 +73,3 @@ class DriverVehicleAssignmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DriverVehicleAssignment
         fields = ('id', 'driver', 'vehicle', 'assignment_date', 'is_active')
-
-# User = get_user_model()
-#
-# class UserRegistrationSerializer(serializers.ModelSerializer):
-#     password = serializers.CharField(write_only=True)
-#
-#     class Meta:
-#         model = User
-#         fields = ('username', 'email', 'password')
-#
-#     def create(self, validated_data):
-#         user = User.objects.create_user(
-#             username=validated_data['username'],
-#             email=validated_data.get('email', ''),
-#             password=validated_data['password']
-#         )
-#         return user
-#
-# class CustomTokenObtainSerializer(TokenObtainPairSerializer):
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
-#         # Добавление кастомных полей в токен (опционально)
-#         token['username'] = user.username
-#         return token

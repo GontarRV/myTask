@@ -17,9 +17,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
+from manager.views import ManagerEnterpriseViewSet, ManagerViewSet
 
 router = DefaultRouter()
-router.register(r'enterprises', views.EnterpriseViewSet)
+router.register(r'enterprises', ManagerEnterpriseViewSet, basename='enterprise')
+router.register(r'managers', ManagerViewSet, basename='manager')
+# router.register(r'enterprises', views.EnterpriseViewSet)
 router.register(r'brands', views.BrandViewSet)
 router.register(r'vehicles', views.VehicleViewSet)
 router.register(r'drivers', views.DriverViewSet)
